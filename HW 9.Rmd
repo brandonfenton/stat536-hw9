@@ -30,6 +30,7 @@ library(ggfortify)
 library(parallel)
 library(mgcv)
 library(nlme)
+library(TSA)
 
 panderOptions('missing', "-")
 
@@ -108,24 +109,20 @@ To help with (b), you should make a table and sort the roots based on the potent
 
 6) To explore long-term QP, you have to consider somewhat higher order AR() models. But sometimes we can get similar fits to the time series from mixed ARMA models. Report the ACF, PACF, and EACF and discuss models that are suggested by these results. We will discuss the PACF and EACF in class on Tuesday so bring questions to class on using them.
 
-> par(mfrow=c(2,1))
-
-> acf(bts)
-
-> pacf(bts)
-
-> eacf(bts)
 
     ```{r p6}
-par(mfrow=c(2,1))
+# returns errors currently.  will figure out later
 
-acf(bts)
+# par(mfrow=c(2,1))
 
-pacf(bts)
+# acf(bts)
+# 
+# pacf(bts)
 
-eacf(bts)    
 
-par(mfrow=c(1,1))
+# eacf(bts)    
+
+# par(mfrow=c(1,1))
 
 ```
 
@@ -133,17 +130,20 @@ par(mfrow=c(1,1))
 
 
     ```{r p7}
-par(mfrow=c(2,1))
+# same as above
     
-dbts<-diff(bts)
+# par(mfrow=c(2,1))
+#     
+# dbts<-diff(bts)
+# 
+# acf(dbts)
+# 
+# pacf(dbts)
 
-acf(dbts)
 
-pacf(dbts)
+# eacf(dbts)    
 
-eacf(dbts)    
-
-par(mfrow=c(1,1))
+# par(mfrow=c(1,1))
 
 ```
 
@@ -152,33 +152,13 @@ par(mfrow=c(1,1))
 8) This should suggest a particular MA model. Fit that model using arima on the differenced series. In other words, use arima(dbts,order=c(0,0,q)) where you need to determine q. Write out the estimated model based on the model results both in terms of the differenced series and the original time series.
 
     ```{r p8}
-par(mfrow=c(2,1))
-    
-dbts<-diff(bts)
 
-acf(dbts)
-
-pacf(dbts)
-
-eacf(dbts)    
-
-par(mfrow=c(1,1))
 
 ```
 
 9) Report the confidence interval for the intercept from the model in #8. Discuss what the test using this confidence interval tells you in this model and how it addresses one of the questions of interest to the researcher. 
 
     ```{r p9}
-par(mfrow=c(2,1))
-    
-dbts<-diff(bts)
 
-acf(dbts)
-
-pacf(dbts)
-
-eacf(dbts)    
-
-par(mfrow=c(1,1))
 
 ```
