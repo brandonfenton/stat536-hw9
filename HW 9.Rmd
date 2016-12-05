@@ -1,0 +1,184 @@
+---
+title: "HW 8"
+author: "Brandon Fenton, Allison Theobold and Matthew Pettigrew"
+date: "Due: December 7, 2016"
+output:
+  pdf_document:
+    fig_height: 3
+    fig_width: 5
+  html_document:
+    fig_width: 5
+  word_document:
+    fig_height: 3
+    fig_width: 5
+    
+header-includes: \usepackage{float} \usepackage{bm} \usepackage{amsmath} \usepackage{amssymb} \usepackage{microtype}
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(warning = FALSE)
+knitr::opts_chunk$set(message = FALSE)
+knitr::opts_chunk$set(echo = FALSE)
+
+library(grid)
+library(gridExtra)
+library(pander)
+library(dplyr)
+library(ggplot2)
+library(effects)
+library(ggfortify)
+library(parallel)
+library(mgcv)
+library(nlme)
+
+panderOptions('missing', "-")
+
+pander_lm <-function (fit, ...)
+{
+  fit.sum <- summary(fit)
+  fit.coef <- fit.sum$coefficients
+  fit.ttable <- matrix(nrow=length(fit.sum$aliased), ncol=4)
+  colnames(fit.ttable) <- colnames(fit.sum$coefficients)
+  rownames(fit.ttable) <- names(fit.sum$aliased)
+
+  notna <- as.vector(which(!fit.sum$aliased))
+  fit.ttable[notna,] <- fit.coef
+  fit.ttable <- as.data.frame(fit.ttable)
+  fit.ttable$`Pr(>|t|)` <- ifelse(fit.ttable$`Pr(>|t|)` < 0.0001, "<0.0001",
+                                     sprintf("%.4f", fit.ttable$`Pr(>|t|)`))
+  
+
+  pander(fit.ttable, ...)
+}
+
+pander_anova <-function (fit, ...)
+{
+  fit.anova <- anova(fit)
+  fit.anova$`Pr(>F)` <- ifelse(fit.anova$`Pr(>F)` < 0.0001, "<0.0001",
+                                  sprintf("%.4f", fit.anova$`Pr(>F)`))
+
+pander(fit.anova, ...)
+}
+
+clust <- makeCluster(detectCores())
+
+# Set seeds for cores (runs will always be the same).
+clusterSetRNGStream(clust, 1800)
+
+# Set seed for regular random number generation (for the non-parallel stuff)
+set.seed(1800)
+
+# Read the data
+bts <- read.csv("bts.csv")
+```
+
+
+A record exists of the ice on and ice off dates for the Baikal Lake in Siberia from 1869 to 1996. We will focus on the duration of ice being present on the lake, which is a count of days for each year. There are no missing values in the time series.
+
+Note that these are yearly observations and that the response is number of days of ice on the lake in each year. A researcher might be interested in finding some sort of long-term periodic behavior in these results as well as assessing evidence related to a trend.
+
+1) Make a nice looking time series plot of the time series.
+
+    ```{r p1}
+```
+
+2) Fit an ARMA(17,0) using the arima function and describe the roots discussing
+
+    ```{r p2}
+```
+
+a) stationarity and
+
+b) potential quasi-periodicities.
+    ```{r p2b}
+```
+To help with (b), you should make a table and sort the roots based on the potential QP.
+
+3) One method for selecting the order of an ARMA model is to use hypothesis tests on the highest order coefficient and drop down if there is no evidence that the coefficients are different from 0. We can also use confidence intervals to do our test by assessing whether our value of interest under the null is inside or outside of the interval. Even though you are using a 95% confidence interval, you are still doing a 5% significance level test. The confint function can be used to generate confidence intervals for coefficients from many models in R, including arima-fit models. Fit an AR(18) model and use the confidence interval to discuss the need for the 18th lag in the model. Then repeat the confidence interval of interest for the previous AR(17) model and discuss the similar result – what does this suggest about the AR(17) model.
+
+    ```{r p3}
+```
+
+4) Report the estimate and 95% confidence interval for the “intercept” that R reports for the AR(17) model. Interpret the estimate and then calculate the actual estimated intercept in the AR(17) model based on the results. Show your work.
+
+    ```{r p4}
+```
+
+5) For the AR(17) model (do not re-fit the model), how many of the lower order autoregressive coefficients are not detectably different from 0 in this model using the confidence intervals?
+
+6) To explore long-term QP, you have to consider somewhat higher order AR() models. But sometimes we can get similar fits to the time series from mixed ARMA models. Report the ACF, PACF, and EACF and discuss models that are suggested by these results. We will discuss the PACF and EACF in class on Tuesday so bring questions to class on using them.
+
+> par(mfrow=c(2,1))
+
+> acf(bts)
+
+> pacf(bts)
+
+> eacf(bts)
+
+    ```{r p6}
+par(mfrow=c(2,1))
+
+acf(bts)
+
+pacf(bts)
+
+eacf(bts)    
+
+par(mfrow=c(1,1))
+
+```
+
+7) Consider taking a first difference in the series and repeating the diagnostics from #6. Use the diff function to do the differencing.
+
+
+    ```{r p7}
+par(mfrow=c(2,1))
+    
+dbts<-diff(bts)
+
+acf(dbts)
+
+pacf(dbts)
+
+eacf(dbts)    
+
+par(mfrow=c(1,1))
+
+```
+
+
+
+8) This should suggest a particular MA model. Fit that model using arima on the differenced series. In other words, use arima(dbts,order=c(0,0,q)) where you need to determine q. Write out the estimated model based on the model results both in terms of the differenced series and the original time series.
+
+    ```{r p8}
+par(mfrow=c(2,1))
+    
+dbts<-diff(bts)
+
+acf(dbts)
+
+pacf(dbts)
+
+eacf(dbts)    
+
+par(mfrow=c(1,1))
+
+```
+
+9) Report the confidence interval for the intercept from the model in #8. Discuss what the test using this confidence interval tells you in this model and how it addresses one of the questions of interest to the researcher. 
+
+    ```{r p9}
+par(mfrow=c(2,1))
+    
+dbts<-diff(bts)
+
+acf(dbts)
+
+pacf(dbts)
+
+eacf(dbts)    
+
+par(mfrow=c(1,1))
+
+```
