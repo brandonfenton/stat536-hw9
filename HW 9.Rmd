@@ -81,7 +81,7 @@ Note that these are yearly observations and that the response is number of days 
 1) Make a nice looking time series plot of the time series.
 
     ```{r p1}
-bts$Year <- seq(1869, 1996, by = 1)    
+Year <- seq(1869, 1996, by = 1)    
 bts <- ts(bts, start = 1869, end = 1996)
 
 plot(Days ~ Year, data = bts, type = "l", lwd = 2, col = "blue",
@@ -92,6 +92,14 @@ plot(Days ~ Year, data = bts, type = "l", lwd = 2, col = "blue",
 2) Fit an ARMA(17,0) using the arima function and describe the roots discussing
 
     ```{r p2}
+    
+fit1 <- arima(bts, order = c(17, 0, 0)) 
+roots <- polyroot(c(1, -fit1$coef[1:17]))    
+table <- data.frame(roots, Mod(roots), Period = (2*pi)/abs(Arg(roots)))
+
+colnames(table) <- c("Roots", "Mod(Roots)", "Period")
+
+pander(table[order(table[, 2]), ])
 ```
 
 a) stationarity and
