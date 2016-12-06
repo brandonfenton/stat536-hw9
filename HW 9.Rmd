@@ -176,31 +176,26 @@ The simplest "clean" model suggested by the eacf output above is an AR(1,1) mode
 
 7) Consider taking a first difference in the series and repeating the diagnostics from #6. Use the diff function to do the differencing.
 
-
     ```{r p7}
-# same as above
     
-# par(mfrow=c(2,1))
-#     
-# dbts<-diff(bts)
-# 
-# acf(dbts)
-# 
-# pacf(dbts)
+dbts<-diff(bts)
+par(mfrow=c(1,2))
+acf(dbts)
+pacf(dbts)
 
-
-# eacf(dbts)    
+eacf(dbts)
 
 # par(mfrow=c(1,1))
 
 ```
 
-
+  The SACF for the first difference has a large spike a lag 1 and then fairly much drops off.  There are also other large correlation values at lags 6 and 15 through 17.  The SPACF has large spikes at the first two lags and lags 4 and 5.  Overall the SPACF exhibits damping behavior.  In the EACF table there is a distinct upper left vertex at ARMA(0,1) suggesting an MA(1) model.  Based on the three diagnostics an MA(1) seems like the strongest candiate, but larger MA processes could also be considered.  
 
 8) This should suggest a particular MA model. Fit that model using arima on the differenced series. In other words, use arima(dbts,order=c(0,0,q)) where you need to determine q. Write out the estimated model based on the model results both in terms of the differenced series and the original time series.
 
     ```{r p8}
 
+dMA1 <- arima(dbts, order=c(0,0,1))
 
 ```
 
