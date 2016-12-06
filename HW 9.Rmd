@@ -96,11 +96,23 @@ plot(Days ~ Year, data = bts, type = "l", lwd = 2, col = "blue",
 fit1 <- arima(bts, order = c(17, 0, 0)) 
 roots <- polyroot(c(1, -fit1$coef[1:17]))    
 table <- data.frame(roots, Mod(roots), Period = (2*pi)/abs(Arg(roots)), 
-                    Stationary = c(rep("Non-Stationary", 17)), 
-                    QuasiPeriod = )
+                    Stationary = c(rep("Stationary", 17)), 
+                    QuasiPeriod = c("5.98 years", 
+                                    "2.44 years (local dependency)",
+                                    "3.3 years", "8.91 years", "4.39 years",
+                                    "2.13 years (local dependency)",
+                                    "2.92 years (local dependency)", 
+                                    "4.54 years", "3.3 years", 
+                                    "2.13 years (local dependency)", 
+                                    "5.98 years", 
+                                    "1.93 years (local dependency)", 
+                                    "2.92 years (local dependency)", 
+                                    "2.44 years (local dependency)", 
+                                    "4.39 years", "8.91 years", 
+                                    "1.93 years (local dependency)"))
 
 
-colnames(table) <- c("Roots", "Mod(Roots)", "Period", "Stationarity")
+colnames(table) <- c("Roots", "Mod(Roots)", "Period", "Stationarity", "Quasi-Period")
 
 pander(table[order(table[, 3]), ])
 ```
