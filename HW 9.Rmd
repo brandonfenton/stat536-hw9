@@ -1,5 +1,5 @@
 ---
-title: "HW 8"
+title: "HW 9"
 author: "Brandon Fenton, Allison Theobold and Matthew Pettigrew"
 date: "Due: December 7, 2016"
 output:
@@ -83,7 +83,7 @@ Note that these are yearly observations and that the response is number of days 
     ```{r p1, echo = FALSE}
 Year <- seq(1869, 1996, by = 1)    
 bts <- ts(bts, start = 1869, end = 1996)
-
+par(mgp=c(2,1,0))
 plot(Days ~ Year, data = bts, type = "l", lwd = 2, col = "blue",
      main = "Days of Ice on Baikal Lake")    
 
@@ -159,50 +159,49 @@ We see in the table above that for the AR(17) model, all but 3 of the coefficien
 6) To explore long-term QP, you have to consider somewhat higher order AR() models. But sometimes we can get similar fits to the time series from mixed ARMA models. Report the ACF, PACF, and EACF and discuss models that are suggested by these results. We will discuss the PACF and EACF in class on Tuesday so bring questions to class on using them.
 
 
-    ```{r p6}
-# returns errors currently.  will figure out later
-
-# par(mfrow=c(2,1))
-
-# acf(bts)
-# 
-# pacf(bts)
-
-
-# eacf(bts)    
-
-# par(mfrow=c(1,1))
+    ```{r p6a}
+acf(bts) 
 
 ```
+The first two lags have sample acf values which are above the cutoff, but the values for lags greater than two don't really become small enough to warrant the claim that there is dampening or a clear cutoff point after any particular lag number.
+
+
+    ```{r p6b}
+pacf(bts)
+
+
+```
+
+    ```{r p6c, echo=T}
+eacf(bts)
+
+```
+The simplest "clean" model suggested by the eacf output above is an AR(1,1) model, but other models marked with an o in the upper left corner (an MA(2) model, for example) would also be suitable candidates.
 
 7) Consider taking a first difference in the series and repeating the diagnostics from #6. Use the diff function to do the differencing.
 
-
     ```{r p7}
-# same as above
     
-# par(mfrow=c(2,1))
-#     
-# dbts<-diff(bts)
-# 
-# acf(dbts)
-# 
-# pacf(dbts)
+dbts<-diff(bts)
+par(mfrow=c(1,2))
+acf(dbts)
+pacf(dbts)
 
-
-# eacf(dbts)    
+eacf(dbts)
 
 # par(mfrow=c(1,1))
 
 ```
 
-
+  The SACF for the first difference has a large spike a lag 1 and then fairly much drops off.  There are also other large correlation values at lags 6 and 15 through 17.  The SPACF has large spikes at the first two lags and lags 4 and 5.  Overall the SPACF exhibits damping behavior.  In the EACF table there is a distinct upper left vertex at ARMA(0,1) suggesting an MA(1) model.  Based on the three diagnostics an MA(1) seems like the strongest candiate, but larger MA processes could also be considered.  
 
 8) This should suggest a particular MA model. Fit that model using arima on the differenced series. In other words, use arima(dbts,order=c(0,0,q)) where you need to determine q. Write out the estimated model based on the model results both in terms of the differenced series and the original time series.
 
     ```{r p8}
 
+dbts.MA1 <- arima(dbts, order=c(0,0,1))
 
+    
 ```
 
 9) Report the confidence interval for the intercept from the model in #8. Discuss what the test using this confidence interval tells you in this model and how it addresses one of the questions of interest to the researcher. 
