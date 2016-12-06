@@ -80,7 +80,7 @@ Note that these are yearly observations and that the response is number of days 
 
 1) Make a nice looking time series plot of the time series.
 
-    ```{r p1}
+    ```{r p1, echo = FALSE}
 Year <- seq(1869, 1996, by = 1)    
 bts <- ts(bts, start = 1869, end = 1996)
 
@@ -91,7 +91,11 @@ plot(Days ~ Year, data = bts, type = "l", lwd = 2, col = "blue",
 
 2) Fit an ARMA(17,0) using the arima function and describe the roots discussing
 
-    ```{r p2}
+a) stationarity and
+
+b) potential quasi-periodicities.
+
+    ```{r p2, echo = FALSE}
     
 fit1 <- arima(bts, order = c(17, 0, 0)) 
 roots <- polyroot(c(1, -fit1$coef[1:17]))    
@@ -117,24 +121,33 @@ colnames(table) <- c("Roots", "Mod(Roots)", "Period", "Stationarity", "Quasi-Per
 pander(table[order(table[, 3]), ])
 ```
 
-a) stationarity and
-
-b) potential quasi-periodicities.
-    ```{r p2b}
-```
 To help with (b), you should make a table and sort the roots based on the potential QP.
 
 3) One method for selecting the order of an ARMA model is to use hypothesis tests on the highest order coefficient and drop down if there is no evidence that the coefficients are different from 0. We can also use confidence intervals to do our test by assessing whether our value of interest under the null is inside or outside of the interval. Even though you are using a 95% confidence interval, you are still doing a 5% significance level test. The confint function can be used to generate confidence intervals for coefficients from many models in R, including arima-fit models. Fit an AR(18) model and use the confidence interval to discuss the need for the 18th lag in the model. Then repeat the confidence interval of interest for the previous AR(17) model and discuss the similar result – what does this suggest about the AR(17) model.
 
-    ```{r p3}
+    ```{r p3, echo = FALSE}
+fit2 <- arima(bts, order = c(18, 0, 0))     
+lag18 <- confint(fit2)[18, ]
+
+lag17 <- confint(fit1)[17, ]
+
+cilag <- rbind(lag18, lag17)
+row.names(cilag) <- c("Lag 18 CI", "Lag 17 CI")
+pander(cilag)
 ```
 
 4) Report the estimate and 95% confidence interval for the “intercept” that R reports for the AR(17) model. Interpret the estimate and then calculate the actual estimated intercept in the AR(17) model based on the results. Show your work.
 
-    ```{r p4}
+    ```{r p4, echo = FALSE}
+intercept <- confint(fit1)[1, ]    
 ```
 
 5) For the AR(17) model (do not re-fit the model), how many of the lower order autoregressive coefficients are not detectably different from 0 in this model using the confidence intervals?
+
+```{r p5, echo = FALSE}
+intervals <- confint(fit1)[-18, ]
+pander(intervals)
+```
 
 6) To explore long-term QP, you have to consider somewhat higher order AR() models. But sometimes we can get similar fits to the time series from mixed ARMA models. Report the ACF, PACF, and EACF and discuss models that are suggested by these results. We will discuss the PACF and EACF in class on Tuesday so bring questions to class on using them.
 
