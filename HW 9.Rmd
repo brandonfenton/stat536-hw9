@@ -103,24 +103,27 @@ roots <- polyroot(c(1, -fit1$coef[1:17]))
 table <- data.frame(roots, Mod(roots), Period = (2*pi)/abs(Arg(roots)), 
                     Stationary = c(rep("Stationary", 17)), 
                     QuasiPeriod = c("5.98 years", 
-                                    "2.44 years (local dependency)",
+                                    "2.44 years",
                                     "3.3 years", "8.91 years", "4.39 years",
-                                    "2.13 years (local dependency)",
-                                    "2.92 years (local dependency)", 
-                                    "4.54 years", "3.3 years", 
-                                    "2.13 years (local dependency)", 
+                                    "2.13 years", "2.92 years", 
+                                    "4.537x10^16 years", "3.3 years", 
+                                    "2.13 years", 
                                     "5.98 years", 
-                                    "1.93 years (local dependency)", 
-                                    "2.92 years (local dependency)", 
-                                    "2.44 years (local dependency)", 
+                                    "19.3 years", 
+                                    "2.92 years", 
+                                    "2.44 years", 
                                     "4.39 years", "8.91 years", 
-                                    "1.93 years (local dependency)"))
+                                    "19.3 years"))
 
 
 colnames(table) <- c("Roots", "Mod(Roots)", "Period", "Stationarity", "Quasi-Period")
 
-pander(table[order(table[, 3]), ])
+pander(table[order(table[, 3]),])
 ```
+
+
+The table above summarizes the roots of the AR(17) model, their stationarity, and their quasi-periodicity. There is only one real root, and all of the roots have modulus greater than 1 (therefore stationary). The quasi-periodicity of the roots are also estimated and ordered from least to greatest. The roots with quasi-periods less than about 3 years could be thought to be due to local dependency, and not demonstrating true quasi-periodicity. Additionally, the last root entry demonstrates an outlandish quasi-periodicity value. Overall, there are estimates of a quasi-period of about 9 years (and 18 years). 
+
 
 3) One method for selecting the order of an ARMA model is to use hypothesis tests on the highest order coefficient and drop down if there is no evidence that the coefficients are different from 0. We can also use confidence intervals to do our test by assessing whether our value of interest under the null is inside or outside of the interval. Even though you are using a 95% confidence interval, you are still doing a 5% significance level test. The confint function can be used to generate confidence intervals for coefficients from many models in R, including arima-fit models. Fit an AR(18) model and use the confidence interval to discuss the need for the 18th lag in the model. Then repeat the confidence interval of interest for the previous AR(17) model and discuss the similar result – what does this suggest about the AR(17) model.  
 
@@ -144,8 +147,16 @@ Below is the estimate {\tt R} provides for $\mu,$ alone with the 95% confidence 
     ```{r p4, echo = FALSE}
 intercept <- data.frame(Estimate = fit1$coef[18], lower = confint(fit1)[1, 1], 
                         upper = confint(fit1)[1, 2])
-
+true_int <- fit1$coef[18]*(1 - sum(fit1$coef[1:17]))
 ```
+
+The true intercept can be calclated from the above model summary as follows, 
+
+\begin{align*}
+\theta_0 &= \mu(1 - \phi_1 - \phi_2 - \cdots - \phi_17) \\
+&= 113.8428(1 - \sum_{i = 1}^17 \phi_i) \\
+&= 17.93473
+\end{align*}
 
 5) For the AR(17) model (do not re-fit the model), how many of the lower order autoregressive coefficients are not detectably different from 0 in this model using the confidence intervals?
 
@@ -208,5 +219,37 @@ dbts.MA1 <- arima(dbts, order=c(0,0,1))
 
     ```{r p9}
 
+
+```
+
+## R Code 
+Setup  
+
+```{r a1, ref.label="setup", eval=F}
+
+```
+
+Problem 1  
+```{r a2, ref.label="p1", eval=F}
+
+```
+
+Problem 2  
+```{r a3, ref.label="p2", eval=F}
+
+```
+
+Problem 3  
+```{r a4, ref.label="p3", eval=F}
+
+```
+
+Problem 4  
+```{r a5, ref.label="p4", eval=F}
+
+```
+
+Problem 5  
+```{r a6, ref.label="p5", eval=F}
 
 ```
