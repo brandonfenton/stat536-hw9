@@ -197,8 +197,9 @@ eacf(dbts)
 
 dbts.MA1 <- arima(dbts, order=c(0,0,1))
 
-    
 ```
+
+
 
 9) Report the confidence interval for the intercept from the model in #8. Discuss what the test using this confidence interval tells you in this model and how it addresses one of the questions of interest to the researcher. 
 
