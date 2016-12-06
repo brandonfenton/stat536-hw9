@@ -155,21 +155,24 @@ We see in the table above that for the AR(17) model, all but 3 of the coefficien
 6) To explore long-term QP, you have to consider somewhat higher order AR() models. But sometimes we can get similar fits to the time series from mixed ARMA models. Report the ACF, PACF, and EACF and discuss models that are suggested by these results. We will discuss the PACF and EACF in class on Tuesday so bring questions to class on using them.
 
 
-    ```{r p6}
-# returns errors currently.  will figure out later
-
-# par(mfrow=c(2,1))
-
-# acf(bts)
-# 
-# pacf(bts)
-
-
-# eacf(bts)    
-
-# par(mfrow=c(1,1))
+    ```{r p6a}
+acf(bts) 
 
 ```
+The first two lags have sample acf values which are above the cutoff, but the values for lags greater than two don't really become small enough to warrant the claim that there is dampening or a clear cutoff point after any particular lag number.
+
+
+    ```{r p6b}
+pacf(bts)
+
+
+```
+
+    ```{r p6c, echo=T}
+eacf(bts)
+
+```
+The simplest "clean" model suggested by the eacf output above is an AR(1,1) model, but other models marked with an o in the upper left corner (an MA(2) model, for example) would also be suitable candidates.
 
 7) Consider taking a first difference in the series and repeating the diagnostics from #6. Use the diff function to do the differencing.
 
