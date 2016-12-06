@@ -137,10 +137,14 @@ row.names(cilag) <- c("Lag 18 CI", "Lag 17 CI")
 pander(cilag)
 ```
 
-4) Report the estimate and 95% confidence interval for the “intercept” that R reports for the AR(17) model. Interpret the estimate and then calculate the actual estimated intercept in the AR(17) model based on the results. Show your work.
+4) Report the estimate and 95% confidence interval for the “intercept” that R reports for the AR(17) model. Interpret the estimate and then calculate the actual estimated intercept in the AR(17) model based on the results. Show your work.  
+
+Below is the estimate {\tt R} provides for $\mu,$ alone with the 95% confidence interval. 
 
     ```{r p4, echo = FALSE}
-intercept <- confint(fit1)[1, ]    
+intercept <- data.frame(Estimate = fit1$coef[18], lower = confint(fit1)[1, 1], 
+                        upper = confint(fit1)[1, 2])
+
 ```
 
 5) For the AR(17) model (do not re-fit the model), how many of the lower order autoregressive coefficients are not detectably different from 0 in this model using the confidence intervals?
