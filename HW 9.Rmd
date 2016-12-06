@@ -93,7 +93,8 @@ plot(Days ~ Year, data = bts, type = "l", lwd = 2, col = "blue",
 
 a) stationarity and
 
-b) potential quasi-periodicities.
+b) potential quasi-periodicities.  
+To help with (b), you should make a table and sort the roots based on the potential QP.
 
     ```{r p2, echo = FALSE}
     
@@ -121,9 +122,9 @@ colnames(table) <- c("Roots", "Mod(Roots)", "Period", "Stationarity", "Quasi-Per
 pander(table[order(table[, 3]), ])
 ```
 
-To help with (b), you should make a table and sort the roots based on the potential QP.
+3) One method for selecting the order of an ARMA model is to use hypothesis tests on the highest order coefficient and drop down if there is no evidence that the coefficients are different from 0. We can also use confidence intervals to do our test by assessing whether our value of interest under the null is inside or outside of the interval. Even though you are using a 95% confidence interval, you are still doing a 5% significance level test. The confint function can be used to generate confidence intervals for coefficients from many models in R, including arima-fit models. Fit an AR(18) model and use the confidence interval to discuss the need for the 18th lag in the model. Then repeat the confidence interval of interest for the previous AR(17) model and discuss the similar result – what does this suggest about the AR(17) model.  
 
-3) One method for selecting the order of an ARMA model is to use hypothesis tests on the highest order coefficient and drop down if there is no evidence that the coefficients are different from 0. We can also use confidence intervals to do our test by assessing whether our value of interest under the null is inside or outside of the interval. Even though you are using a 95% confidence interval, you are still doing a 5% significance level test. The confint function can be used to generate confidence intervals for coefficients from many models in R, including arima-fit models. Fit an AR(18) model and use the confidence interval to discuss the need for the 18th lag in the model. Then repeat the confidence interval of interest for the previous AR(17) model and discuss the similar result – what does this suggest about the AR(17) model.
+We see in the table below that the 95\% confidence interval for $\phi_{18}$ contains 0, therefore leading us to conclude that and AR(17) model may be sufficient. The second entry in the table is a confidence interval for $\phi_{17},$ which does not contain 0. Thus, we conclude that an AR(17) model is a better fit for these data. 
 
     ```{r p3, echo = FALSE}
 fit2 <- arima(bts, order = c(18, 0, 0))     
@@ -148,6 +149,8 @@ intercept <- confint(fit1)[1, ]
 intervals <- confint(fit1)[-18, ]
 pander(intervals)
 ```
+
+We see in the table above that for the AR(17) model, all but 3 of the coefficient confidence intervals contain 0.  
 
 6) To explore long-term QP, you have to consider somewhat higher order AR() models. But sometimes we can get similar fits to the time series from mixed ARMA models. Report the ACF, PACF, and EACF and discuss models that are suggested by these results. We will discuss the PACF and EACF in class on Tuesday so bring questions to class on using them.
 
