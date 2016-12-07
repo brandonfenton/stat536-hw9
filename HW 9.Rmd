@@ -80,7 +80,7 @@ Note that these are yearly observations and that the response is number of days 
 
 1) Make a nice looking time series plot of the time series.
 
-    ```{r p1, echo = FALSE}
+    ```{r p1}
 Year <- seq(1869, 1996, by = 1)    
 bts <- ts(bts, start = 1869, end = 1996)
 par(mgp=c(2,1,0))
@@ -96,7 +96,7 @@ a) stationarity and
 b) potential quasi-periodicities.  
 To help with (b), you should make a table and sort the roots based on the potential QP.
 
-    ```{r p2, echo = FALSE}
+    ```{r p2}
     
 fit1 <- arima(bts, order = c(17, 0, 0)) 
 roots <- polyroot(c(1, -fit1$coef[1:17]))    
@@ -121,15 +121,15 @@ colnames(table) <- c("Roots", "Mod(Roots)", "Period", "Stationarity", "Quasi-Per
 pander(table[order(table[, 3]),])
 ```
 
-
-The table above summarizes the roots of the AR(17) model, their stationarity, and their quasi-periodicity. There is only one real root, and all of the roots have modulus greater than 1 (therefore stationary). The quasi-periodicity of the roots are also estimated and ordered from least to greatest. The roots with quasi-periods less than about 3 years could be thought to be due to local dependency, and not demonstrating true quasi-periodicity. Additionally, the last root entry demonstrates an outlandish quasi-periodicity value. Overall, there are estimates of a quasi-period of about 9 years (and 18 years). 
+  
+    The table above summarizes the roots of the AR(17) model, their stationarity, and their quasi-periodicity. There is only one real root, and all of the roots have modulus greater than 1 (therefore stationary). The quasi-periodicity of the roots are also estimated and ordered from least to greatest. The roots with quasi-periods less than about 3 years could be thought to be due to local dependency, and not demonstrating true quasi-periodicity. Additionally, the last root entry demonstrates an outlandish quasi-periodicity value. Overall, there are estimates of a quasi-period of about 9 years (and 18 years). 
 
 
 3) One method for selecting the order of an ARMA model is to use hypothesis tests on the highest order coefficient and drop down if there is no evidence that the coefficients are different from 0. We can also use confidence intervals to do our test by assessing whether our value of interest under the null is inside or outside of the interval. Even though you are using a 95% confidence interval, you are still doing a 5% significance level test. The confint function can be used to generate confidence intervals for coefficients from many models in R, including arima-fit models. Fit an AR(18) model and use the confidence interval to discuss the need for the 18th lag in the model. Then repeat the confidence interval of interest for the previous AR(17) model and discuss the similar result – what does this suggest about the AR(17) model.  
 
-We see in the table below that the 95\% confidence interval for $\phi_{18}$ contains 0, therefore leading us to conclude that and AR(17) model may be sufficient. The second entry in the table is a confidence interval for $\phi_{17},$ which does not contain 0. Thus, we conclude that an AR(17) model is a better fit for these data. 
+    We see in the table below that the 95\% confidence interval for $\phi_{18}$ contains 0, therefore leading us to conclude that and AR(17) model may be sufficient. The second entry in the table is a confidence interval for $\phi_{17},$ which does not contain 0. Thus, we conclude that an AR(17) model is a better fit for these data. 
 
-    ```{r p3, echo = FALSE}
+    ```{r p3}
 fit2 <- arima(bts, order = c(18, 0, 0))     
 lag18 <- confint(fit2)[18, ]
 
@@ -137,17 +137,20 @@ lag17 <- confint(fit1)[17, ]
 
 cilag <- rbind(lag18, lag17)
 row.names(cilag) <- c("Lag 18 CI", "Lag 17 CI")
+
 pander(cilag)
 ```
 
 4) Report the estimate and 95% confidence interval for the “intercept” that R reports for the AR(17) model. Interpret the estimate and then calculate the actual estimated intercept in the AR(17) model based on the results. Show your work.  
+  
+    Below is the estimate {\tt R} provides for $\mu,$ alone with the 95% confidence interval. 
 
-Below is the estimate {\tt R} provides for $\mu,$ alone with the 95% confidence interval. 
+    ```{r p4}
 
-    ```{r p4, echo = FALSE}
 intercept <- data.frame(Estimate = fit1$coef[18], lower = confint(fit1)[1, 1], 
                         upper = confint(fit1)[1, 2])
 true_int <- fit1$coef[18]*(1 - sum(fit1$coef[1:17]))
+
 ```
 
 The true intercept can be calclated from the above model summary as follows, 
@@ -160,12 +163,12 @@ The true intercept can be calclated from the above model summary as follows,
 
 5) For the AR(17) model (do not re-fit the model), how many of the lower order autoregressive coefficients are not detectably different from 0 in this model using the confidence intervals?
 
-```{r p5, echo = FALSE}
+    ```{r p5}
 intervals <- confint(fit1)[-18, ]
 pander(intervals)
 ```
-
-We see in the table above that for the AR(17) model, all but 3 of the coefficient confidence intervals contain 0.  
+  
+    We see in the table above that for the AR(17) model, all but 3 of the coefficient confidence intervals contain 0.  
 
 6) To explore long-term QP, you have to consider somewhat higher order AR() models. But sometimes we can get similar fits to the time series from mixed ARMA models. Report the ACF, PACF, and EACF and discuss models that are suggested by these results. We will discuss the PACF and EACF in class on Tuesday so bring questions to class on using them.
 
@@ -174,7 +177,8 @@ We see in the table above that for the AR(17) model, all but 3 of the coefficien
 acf(bts) 
 
 ```
-The first two lags have sample acf values which are above the cutoff, but the values for lags greater than two don't really become small enough to warrant the claim that there is dampening or a clear cutoff point after any particular lag number.
+
+    The first two lags have sample acf values which are above the cutoff, but the values for lags greater than two don't really become small enough to warrant the claim that there is dampening or a clear cutoff point after any particular lag number.  A cutoff after lag 2 in conjunction with a SPACF plot showing damping would support an MA(2) model, but again, it is questionable whether there is really a cutoff after lag 2.
 
 
     ```{r p6b}
@@ -183,28 +187,33 @@ pacf(bts)
 
 ```
 
+    The SPACF shows a possible cutoff after lag 2, but as with the SACF, it is not clear whether this is really a cutoff.  There does not appear to be any damping present.
+
     ```{r p6c, echo=T}
 eacf(bts)
 
 ```
-The simplest "clean" model suggested by the eacf output above is an AR(1,1) model, but other models marked with an o in the upper left corner (an MA(2) model, for example) would also be suitable candidates.
+  
+    The simplest "clean" model suggested by the EACF output above is an AR(1,1) model, but other models marked with an o in the upper left of the EACF output (an MA(2) model, for example) would also be suitable candidates.  However, the results from the EACF and SPACF suggest that none should be used.
 
 7) Consider taking a first difference in the series and repeating the diagnostics from #6. Use the diff function to do the differencing.
 
-    ```{r p7}
+    ```{r p7a}
     
 dbts<-diff(bts)
-par(mfrow=c(1,2))
 acf(dbts)
-pacf(dbts)
+```
 
+    ```{r p7b}
+    
+pacf(dbts)
 eacf(dbts)
 
 # par(mfrow=c(1,1))
 
 ```
-
-  The SACF for the first difference has a large spike a lag 1 and then fairly much drops off.  There are also other large correlation values at lags 6 and 15 through 17.  The SPACF has large spikes at the first two lags and lags 4 and 5.  Overall the SPACF exhibits damping behavior.  In the EACF table there is a distinct upper left vertex at ARMA(0,1) suggesting an MA(1) model.  Based on the three diagnostics an MA(1) seems like the strongest candiate, but larger MA processes could also be considered.  
+  
+    The SACF for the first difference has a large spike at lag 1 and then fairly much drops off.  There are also other large correlation values at lags 6 and 15 through 17.  The SPACF has large spikes at the first two lags and lags 4 and 5.  Overall the SPACF exhibits damping behavior.  In the EACF table there is a distinct upper left vertex at ARMA(0,1) suggesting an MA(1) model.  Based on the three diagnostics an MA(1) seems like the strongest candiate, but larger MA processes could also be considered.  
 
 8) This should suggest a particular MA model. Fit that model using arima on the differenced series. In other words, use arima(dbts,order=c(0,0,q)) where you need to determine q. Write out the estimated model based on the model results both in terms of the differenced series and the original time series.
 
@@ -219,38 +228,71 @@ dbts.MA1 <- arima(dbts, order=c(0,0,1))
 9) Report the confidence interval for the intercept from the model in #8. Discuss what the test using this confidence interval tells you in this model and how it addresses one of the questions of interest to the researcher. 
 
     ```{r p9}
-
-
-```
-
-## R Code 
-Setup  
-
-```{r a1, ref.label="setup", eval=F}
+pander(confint(dbts.MA1))
 
 ```
 
-Problem 1  
-```{r a2, ref.label="p1", eval=F}
+
+## R code appendix
+
+# Setup
+```{r a0, ref.label="setup", eval=F, echo=T}
 
 ```
 
-Problem 2  
-```{r a3, ref.label="p2", eval=F}
+# Problem 1
+```{r a1, ref.label="p1", eval=F, echo=T}
 
 ```
 
-Problem 3  
-```{r a4, ref.label="p3", eval=F}
+# Problem 2
+```{r a2, ref.label="p2", eval=F, echo=T}
 
 ```
 
-Problem 4  
-```{r a5, ref.label="p4", eval=F}
+# Problem 3
+```{r a3, ref.label="p3", eval=F, echo=T}
 
 ```
 
-Problem 5  
-```{r a6, ref.label="p5", eval=F}
+# Problem 4
+```{r a4, ref.label="p4", eval=F, echo=T}
+
+```
+
+# Problem 5
+```{r a5, ref.label="p5", eval=F, echo=T}
+
+```
+
+# Problem 6
+```{r a6a, ref.label="p6a", eval=F, echo=T}
+
+```
+
+```{r a6b, ref.label="p6b", eval=F, echo=T}
+
+```
+
+```{r a6c, ref.label="p6c", eval=F, echo=T}
+
+```
+
+# Problem 7
+```{r a7a, ref.label="p7a", eval=F, echo=T}
+
+```
+
+```{r a7b, ref.label="p7b", eval=F, echo=T}
+
+```
+
+# Problem 8
+```{r a8, ref.label="p8", eval=F, echo=T}
+
+```
+
+# Problem 9
+```{r a9, ref.label="asdf", eval=F, echo=T}
 
 ```
