@@ -153,7 +153,7 @@ true_int <- fit1$coef[18]*(1 - sum(fit1$coef[1:17]))
 
 ```
 
-The true intercept can be calclated from the above model summary as follows, 
+    The true intercept can be calculated from the above model summary as follows:
 
 \begin{align*}
 \theta_0 &= \mu(1 - \phi_1 - \phi_2 - \cdots - \phi_17) \\
@@ -178,7 +178,7 @@ acf(bts)
 
 ```
 
-    The first two lags have sample acf values which are above the cutoff, but the values for lags greater than two don't really become small enough to warrant the claim that there is dampening or a clear cutoff point after any particular lag number.  A cutoff after lag 2 in conjunction with a SPACF plot showing damping would support an MA(2) model, but again, it is questionable whether there is really a cutoff after lag 2.
+    The first two lags have SACF values which are above the cutoff, but the values for lags greater than two are not necessarily small enough to warrant the claim that there is dampening or a clear cutoff point after any particular lag number.  A cutoff after lag 2 in conjunction with a SPACF plot showing damping would support an MA(2) model, but again, it is questionable whether there is really a cutoff after lag 2.
 
 
     ```{r p6b}
@@ -253,7 +253,7 @@ pander(confint(dbts.MA1))
 
 ```
 
-The intercept is equivelent to the slope for a linear time trend model in this context as it is a first difference models.  At the confidence interval does not contain zero this provides strong evidence that number of days per year with ice on the lake is decreasing over the period of the study.
+    The intercept is equivelent to the slope for a linear time trend model in this context as it is a first difference models.  As the confidence interval does not contain zero this provides strong evidence that number of days per year with ice on the lake is decreasing over the period of the study.
 
 ## R code appendix
 
@@ -330,6 +330,6 @@ The intercept is equivelent to the slope for a linear time trend model in this c
 ```
 
 # Problem 9
-```{r a9, ref.label="asdf", eval=F, echo=T}
+```{r a9, ref.label="p9", eval=F, echo=T}
 
 ```
