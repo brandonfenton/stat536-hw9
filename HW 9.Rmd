@@ -209,7 +209,7 @@ eacf(dbts)
 8) This should suggest a particular MA model. Fit that model using arima on the differenced series. In other words, use arima(dbts,order=c(0,0,q)) where you need to determine q. Write out the estimated model based on the model results both in terms of the differenced series and the original time series.
 
     ```{r p8}
-
+    
 dbts.MA1 <- arima(dbts, order=c(0,0,1))
 
 ```
