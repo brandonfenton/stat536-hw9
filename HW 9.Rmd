@@ -189,10 +189,17 @@ pacf(bts)
 
     The SPACF shows a possible cutoff after lag 2, but as with the SACF, it is not clear whether this is really a cutoff.  There does not appear to be any damping present.
 
-    ```{r p6c, echo=T}
-eacf(bts)
+    ```{r p6c, results="hide"}
+    
+bts.eacf <- as.data.frame(eacf(bts)$symbol)
 
-```
+```  
+  
+    ```{r p6d}
+    
+pander(bts.eacf)
+
+```  
   
     The simplest "clean" model suggested by the EACF output above is an AR(1,1) model, but other models marked with an o in the upper left of the EACF output (an MA(2) model, for example) would also be suitable candidates.  However, the results from the EACF and SPACF suggest that none should be used.
 
@@ -207,12 +214,20 @@ acf(dbts)
     ```{r p7b}
     
 pacf(dbts)
-eacf(dbts)
-
-# par(mfrow=c(1,1))
-
 ```
+
+    ```{r p7c, results="hide"}
+    
+dbts.eacf <- as.data.frame(eacf(dbts)$symbol)
+
+```  
   
+    ```{r p7d}
+    
+pander(dbts.eacf)
+
+```  
+
     The SACF for the first difference has a large spike at lag 1 and then fairly much drops off.  There are also other large correlation values at lags 6 and 15 through 17.  The SPACF has large spikes at the first two lags and lags 4 and 5.  Overall the SPACF exhibits damping behavior.  In the EACF table there is a distinct upper left vertex at ARMA(0,1) suggesting an MA(1) model.  Based on the three diagnostics an MA(1) seems like the strongest candiate, but larger MA processes could also be considered.  
 
 8) This should suggest a particular MA model. Fit that model using arima on the differenced series. In other words, use arima(dbts,order=c(0,0,q)) where you need to determine q. Write out the estimated model based on the model results both in terms of the differenced series and the original time series.
@@ -220,8 +235,10 @@ eacf(dbts)
     ```{r p8}
     
 dbts.MA1 <- arima(dbts, order=c(0,0,1))
-pander(dbts.MA1)
 
+dbts.tab <- cbind(as.matrix(dbts.MA1$coef),c(sqrt(dbts.MA1$var.coef[1,1]), sqrt(dbts.MA1$var.coef[2,2])))
+colnames(dbts.tab) <- c("Estimate", "SE")
+pander(dbts.tab)
 ```
 
   $$\widehat{y_t} = -0.1766 + y_{t-1} + \widehat{e_t} - \widehat{e_{t-1}}$$
