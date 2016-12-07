@@ -253,6 +253,7 @@ pander(confint(dbts.MA1))
 
 ```
 
+The intercept is equivelent to the slope for a linear time trend model in this context as it is a first difference models.  At the confidence interval does not contain zero this provides strong evidence that number of days per year with ice on the lake is decreasing over the period of the study.
 
 ## R code appendix
 
