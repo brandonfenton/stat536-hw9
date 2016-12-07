@@ -143,7 +143,7 @@ pander(cilag)
 
 4) Report the estimate and 95% confidence interval for the “intercept” that R reports for the AR(17) model. Interpret the estimate and then calculate the actual estimated intercept in the AR(17) model based on the results. Show your work.  
   
-    Below is the estimate {\tt R} provides for $\mu,$ alone with the 95% confidence interval. 
+    Below is the estimate `R` provides for $\mu,$ alone with the 95% confidence interval. 
 
     ```{r p4}
 
@@ -300,6 +300,11 @@ The intercept is equivelent to the slope for a linear time trend model in this c
 
 ```
 
+```{r a6d, ref.label="p6d", eval=F, echo=T}
+
+```
+
+
 # Problem 7
 ```{r a7a, ref.label="p7a", eval=F, echo=T}
 
@@ -308,6 +313,16 @@ The intercept is equivelent to the slope for a linear time trend model in this c
 ```{r a7b, ref.label="p7b", eval=F, echo=T}
 
 ```
+
+```{r a7c, ref.label="p7c", eval=F, echo=T}
+
+```
+
+```{r a7d, ref.label="p7d", eval=F, echo=T}
+
+```
+
+
 
 # Problem 8
 ```{r a8, ref.label="p8", eval=F, echo=T}
